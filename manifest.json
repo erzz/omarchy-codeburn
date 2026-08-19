@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "id": "codeburn",
+  "name": "CodeBurn",
+  "version": "1.0.0",
+  "author": "Sean Erswell-Liljefelt",
+  "description": "Real-time AI spend and token usage tracker with model breakdown and provider stats for Omarchy.",
+  "license": "MIT",
+  "kinds": [
+    "bar-widget"
+  ],
+  "entryPoints": {
+    "barWidget": "Panel.qml"
+  },
+  "barWidget": {
+    "displayName": "CodeBurn",
+    "description": "Status bar spend badge and detailed AI analytics popup.",
+    "category": "AI",
+    "aliases": ["burn", "ai-cost"],
+    "allowMultiple": false,
+    "defaultSection": "right",
+    "defaults": {
+      "refreshIntervalSec": 300
+    },
+    "schema": [
+      {
+        "key": "refreshIntervalSec",
+        "type": "integer",
+        "label": "Refresh interval (seconds)",
+        "min": 60,
+        "max": 3600,
+        "step": 30,
+        "defaultValue": 300
+      }
+    ]
+  }
+}
