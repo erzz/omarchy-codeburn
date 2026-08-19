@@ -6,6 +6,10 @@
 
 <a href="https://www.buymeacoffee.com/erzz"><img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=&slug=erzz&button_colour=5F7FFF&font_colour=ffffff&font_family=Arial&outline_colour=000000&coffee_colour=FFDD00" /></a>
 
+<p align="center">
+  <img src="docs/screenshot.png" alt="CodeBurn Omarchy Status Bar Widget and Analytics Popup" width="420" />
+</p>
+
 ---
 
 ## Features
