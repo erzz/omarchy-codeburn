@@ -14,16 +14,23 @@
 
 ## Features
 
-- **Concise Bar Badge**: Displays daily spend at a glance (e.g. `󰈸 $7.85`) with automatic 5-minute background caching and refresh.
+- **Concise Bar Badge**: Displays spend at a glance (e.g. `󰈸 $10.70`) with automatic 5-minute background caching and refresh.
+- **Selectable Reporting Periods**: Switch reporting ranges on the fly with a single click or keystroke:
+  - **Today** (default)
+  - **7 Days**
+  - **30 Days**
+  - **Month**
+  - **6 Months**
+  - **Lifetime**
 - **Rich Analytics Popup**:
-  - **Today Overview**: Total cost, API call count, active sessions, and cache hit rate percentage.
+  - **Period Overview**: Total cost, API call count, active sessions, and cache hit rate percentage.
   - **Token Throughput Strip**: Real-time input, output, and cache read tokens.
   - **Provider Spend Breakdown**: Granular cost tracking by provider (OpenCode, OpenAI, Anthropic, Fireworks, etc.).
   - **Top Models Breakdown**: Token spend per model with proportional visual burn distribution meters.
   - **Activity Breakdown**: Spend and turn counts grouped by activity (Exploration, Coding, Debugging, etc.).
 - **Zero Configuration Required**: Uses `npx --yes codeburn status --format menubar-json` out of the box or automatically leverages a locally installed `codeburn` binary if available.
 - **Unobtrusive Recovery UX**: When offline or if usage logs are uninitialized, displays a graceful recovery hint rather than intrusive error dialogs.
-- **Full Keyboard Navigation**: Supports standard Omarchy shortcuts (`R` to refresh, `Esc` to close, `Tab` / Arrow keys for navigation).
+- **Full Keyboard Navigation**: Supports standard Omarchy shortcuts (`←` / `→` for periods, `1`–`6` for direct jumps, `R` to refresh, `Esc` to close).
 
 ---
 
@@ -58,6 +65,8 @@ omarchy bar move codeburn --after omarchy.agents
 - **Left-Click**: Toggle the CodeBurn details popup.
 - **Right-Click**: Instantly trigger a live background data refresh.
 - **Keyboard Shortcuts** (while popup is open):
+  - `←` / `→` or `[` / `]` — Cycle through reporting periods
+  - `1` to `6` — Direct jump to period (1: Today, 2: 7 Days, 3: 30 Days, 4: Month, 5: 6 Months, 6: Lifetime)
   - `R` — Refresh data immediately
   - `Esc` — Close popup
   - `Tab` / `Shift+Tab` — Switch between adjacent Omarchy panels

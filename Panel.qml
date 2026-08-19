@@ -24,6 +24,44 @@ Panel {
   }
   readonly property int refreshIntervalSec: Math.max(60, Number(setting("refreshIntervalSec", 300)) || 300)
 
+  // Reporting Periods
+  property string selectedPeriod: "today"
+  readonly property var periods: [
+    { id: "today", label: "Today" },
+    { id: "week", label: "7 Days" },
+    { id: "30days", label: "30 Days" },
+    { id: "month", label: "Month" },
+    { id: "all", label: "6 Months" },
+    { id: "lifetime", label: "Lifetime" }
+  ]
+
+  function periodLabel(id) {
+    for (var i = 0; i < periods.length; i++) {
+      if (periods[i].id === id) return periods[i].label
+    }
+    return "Today"
+  }
+
+  readonly property string selectedPeriodLabel: periodLabel(selectedPeriod)
+
+  function selectPeriod(periodId) {
+    if (selectedPeriod === periodId) return
+    selectedPeriod = periodId
+    refresh()
+  }
+
+  function cyclePeriod(direction) {
+    var currentIndex = 0
+    for (var i = 0; i < periods.length; i++) {
+      if (periods[i].id === selectedPeriod) {
+        currentIndex = i
+        break
+      }
+    }
+    var nextIndex = (currentIndex + direction + periods.length) % periods.length
+    selectPeriod(periods[nextIndex].id)
+  }
+
   property var statusData: null
   property bool refreshing: false
   property bool hasError: false
@@ -51,7 +89,7 @@ Panel {
   readonly property string barCostText: isOnline ? formatCost(cost) : "--"
   readonly property string barStatusText: "󰈸 " + barCostText
   readonly property string barTooltipText: isOnline
-    ? "CodeBurn: " + formatCost(cost) + " today · " + calls + " calls · " + sessions + " sessions (right-click to refresh)"
+    ? "CodeBurn (" + selectedPeriodLabel + "): " + formatCost(cost) + " · " + calls + " calls · " + sessions + " sessions (right-click to refresh)"
     : "CodeBurn: status unavailable (right-click to refresh)"
 
   visible: true
@@ -137,7 +175,7 @@ Panel {
 
   Process {
     id: statusProcess
-    command: [root.statusCommand]
+    command: [root.statusCommand, root.selectedPeriod]
     running: false
 
     stdout: StdioCollector {
@@ -182,6 +220,19 @@ Panel {
     onTriggered: root.nowMs = Date.now()
   }
 
+  IpcHandler {
+    target: root.ipcTarget
+    function open(): void { root.open() }
+    function close(): void { root.close() }
+    function show(): void { root.open() }
+    function hide(): void { root.close() }
+    function toggle(): void { root.toggle() }
+    function refresh(): string { root.refresh(); return "ok" }
+    function setPeriod(p: string): string { root.selectPeriod(p); return "ok" }
+    function nextPeriod(): string { root.cyclePeriod(1); return "ok" }
+    function prevPeriod(): string { root.cyclePeriod(-1); return "ok" }
+  }
+
   WidgetButton {
     id: button
     anchors.fill: parent
@@ -207,14 +258,16 @@ Panel {
     open: root.opened
     focusTarget: keyCatcher
     contentWidth: panel.fittedContentWidth(Style.space(420))
-    contentHeight: panel.fittedContentHeight(contentColumn.implicitHeight, Style.space(660))
+    contentHeight: panel.fittedContentHeight(contentColumn.implicitHeight, Style.space(690))
 
     PanelKeyCatcher {
       id: keyCatcher
       anchors.fill: parent
 
       onMoveRequested: function(dx, dy) {
-        if (dy !== 0 && panelFlick) {
+        if (dx !== 0) {
+          root.cyclePeriod(dx > 0 ? 1 : -1)
+        } else if (dy !== 0 && panelFlick) {
           panelFlick.contentY = Math.max(0, Math.min(
             panelFlick.contentY + dy * Style.space(60),
             Math.max(0, panelFlick.contentHeight - panelFlick.height)
@@ -226,6 +279,14 @@ Panel {
       onTabRequested: function(direction) { root.switchPanel(direction) }
       onTextKey: function(text) {
         if (text === "r" || text === "R") root.refresh()
+        else if (text === "1") root.selectPeriod("today")
+        else if (text === "2") root.selectPeriod("week")
+        else if (text === "3") root.selectPeriod("30days")
+        else if (text === "4") root.selectPeriod("month")
+        else if (text === "5") root.selectPeriod("all")
+        else if (text === "6") root.selectPeriod("lifetime")
+        else if (text === "]" || text === "p") root.cyclePeriod(1)
+        else if (text === "[" || text === "P") root.cyclePeriod(-1)
       }
 
       Flickable {
@@ -249,7 +310,7 @@ Panel {
             width: parent.width
             title: "CodeBurn"
             meta: root.isOnline
-              ? (root.current && root.current.label ? String(root.current.label).toUpperCase() : "AI SPEND & USAGE")
+              ? (root.current && root.current.label ? String(root.current.label).toUpperCase() : root.selectedPeriodLabel.toUpperCase())
               : "STATUS"
             detail: root.isOnline ? root.formatCost(root.cost) : "Offline"
             foreground: root.foreground
@@ -271,6 +332,65 @@ Panel {
                 foreground: root.foreground
                 fontFamily: root.fontFamily
                 onClicked: root.refresh()
+              }
+            }
+          }
+
+          // --------------------------------------------------- PERIOD SELECTOR
+          BorderSurface {
+            width: parent.width
+            implicitHeight: periodRow.implicitHeight + Style.space(6)
+            radius: Style.cornerRadius
+            color: Qt.rgba(root.foreground.r, root.foreground.g, root.foreground.b, 0.03)
+            borderSpec: Border.none()
+
+            Row {
+              id: periodRow
+              anchors.centerIn: parent
+              width: parent.width - Style.space(6)
+              spacing: Style.space(3)
+
+              Repeater {
+                model: root.periods
+
+                Item {
+                  required property var modelData
+                  required property int index
+
+                  width: (periodRow.width - (root.periods.length - 1) * periodRow.spacing) / root.periods.length
+                  implicitHeight: Style.space(24)
+
+                  readonly property bool isSelected: root.selectedPeriod === modelData.id
+                  readonly property bool isHot: segMouse.containsMouse
+
+                  BorderSurface {
+                    anchors.fill: parent
+                    radius: Style.cornerRadius
+                    color: isSelected
+                      ? Style.selectedFillFor(root.accentColor, root.accentColor)
+                      : (isHot ? Style.hoverFillFor(root.foreground, root.foreground) : "transparent")
+                    borderSpec: isSelected
+                      ? Border.controlSpec("focus", root.accentColor, root.accentColor)
+                      : Border.none()
+
+                    Text {
+                      anchors.centerIn: parent
+                      text: modelData.label
+                      color: isSelected ? root.accentColor : (isHot ? root.foreground : root.dim)
+                      font.family: root.fontFamily
+                      font.pixelSize: Style.font.caption
+                      font.bold: isSelected
+                    }
+
+                    MouseArea {
+                      id: segMouse
+                      anchors.fill: parent
+                      hoverEnabled: true
+                      cursorShape: Qt.PointingHandCursor
+                      onClicked: root.selectPeriod(modelData.id)
+                    }
+                  }
+                }
               }
             }
           }
@@ -351,7 +471,7 @@ Panel {
             spacing: Style.space(8)
 
             PanelSectionHeader {
-              text: "TODAY OVERVIEW"
+              text: (root.current && root.current.label ? String(root.current.label).toUpperCase() : root.selectedPeriodLabel.toUpperCase()) + " OVERVIEW"
               foreground: root.foreground
               fontFamily: root.fontFamily
             }
@@ -613,7 +733,7 @@ Panel {
               spacing: Style.space(8)
 
               Text {
-                text: "[R] Refresh  ·  [Esc] Close"
+                text: "[←/→] Period  ·  [R] Refresh  ·  [Esc] Close"
                 color: root.dim
                 font.family: root.fontFamily
                 font.pixelSize: Style.font.caption
