@@ -5,7 +5,7 @@
 `omarchy-codeburn` is an Omarchy shell bar-widget plugin powered by [CodeBurn](https://github.com/getagentseal/codeburn). It gives you instant visibility into your AI assistant spend, active provider accounts (OpenCode, Anthropic, OpenAI, etc.), token throughput, and model consumption directly from your desktop panel.
 
 <p align="center">
-  <img src="docs/screenshot.png" alt="CodeBurn Omarchy Status Bar Widget and Analytics Popup" width="420" />
+  <img src="preview.png" alt="CodeBurn Omarchy Status Bar Widget and Analytics Popup" width="420" />
 </p>
 
 <a href="https://www.buymeacoffee.com/erzz"><img src="docs/buy-me-a-coffee.png" alt="Buy me a coffee" /></a>
