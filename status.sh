@@ -13,13 +13,14 @@ case "$PERIOD" in
 esac
 
 ARGS=(status --format menubar-json --period "$PERIOD" --no-optimize --no-timeline)
+CODEBURN_PACKAGE="codeburn@0.9.20"
 
 if command -v codeburn >/dev/null 2>&1; then
   exec codeburn "${ARGS[@]}"
 elif command -v npx >/dev/null 2>&1; then
-  exec npx --yes codeburn "${ARGS[@]}"
+  exec npx --yes "$CODEBURN_PACKAGE" "${ARGS[@]}"
 elif command -v bunx >/dev/null 2>&1; then
-  exec bunx codeburn "${ARGS[@]}"
+  exec bunx "$CODEBURN_PACKAGE" "${ARGS[@]}"
 else
   echo '{"error":"neither codeburn nor npx found in PATH"}' >&2
   exit 1

@@ -435,7 +435,7 @@ Panel {
                 width: parent.width
                 text: root.errorMessage !== ""
                   ? root.errorMessage
-                  : "Unable to query codeburn status via npx or local CLI."
+                  : "Unable to query CodeBurn via local CLI, npx, or bunx."
                 color: root.subtleText
                 font.family: root.fontFamily
                 font.pixelSize: Style.font.caption
@@ -454,7 +454,7 @@ Panel {
                 Text {
                   id: codeHint
                   anchors.centerIn: parent
-                  text: "npx codeburn status"
+                  text: "Pinned CodeBurn fallback"
                   color: root.accentColor
                   font.family: root.fontFamily
                   font.pixelSize: Style.font.caption

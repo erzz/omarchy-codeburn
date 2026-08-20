@@ -2,6 +2,11 @@
 
 All notable changes to the CodeBurn Omarchy shell plugin will be documented in this file.
 
+## Unreleased
+
+### Changed
+- Preserve the local `codeburn` binary as the first choice and pin `npx`/`bunx` fallback execution to `codeburn@0.9.20`.
+
 ## [1.1.0] - 2026-08-19
 
 ### Added
@@ -22,6 +27,6 @@ All notable changes to the CodeBurn Omarchy shell plugin will be documented in t
 - Real-time provider spend breakdown (OpenCode, Anthropic, OpenAI, etc.).
 - Top model consumption listing with proportional visual burn distribution meters.
 - Task activity breakdown (Exploration, Coding, Conversation, Debugging).
-- Resilient non-blocking background polling with auto-discovery of local `codeburn` CLI or `npx --yes codeburn`.
+- Resilient non-blocking background polling with auto-discovery of local `codeburn` CLI or pinned `npx`/`bunx` Git fallback.
 - Unobtrusive error handling and recovery troubleshooting guidance.
 - Full keyboard navigation and shortcuts (`R` to refresh, `Esc` to close).

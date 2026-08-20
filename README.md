@@ -28,7 +28,7 @@
   - **Provider Spend Breakdown**: Granular cost tracking by provider (OpenCode, OpenAI, Anthropic, Fireworks, etc.).
   - **Top Models Breakdown**: Token spend per model with proportional visual burn distribution meters.
   - **Activity Breakdown**: Spend and turn counts grouped by activity (Exploration, Coding, Debugging, etc.).
-- **Zero Configuration Required**: Uses `npx --yes codeburn status --format menubar-json` out of the box or automatically leverages a locally installed `codeburn` binary if available.
+- **Zero Configuration Required**: Uses a local `codeburn` binary first; otherwise, `npx` or `bunx` runs the pinned `codeburn@0.9.20` release.
 - **Unobtrusive Recovery UX**: When offline or if usage logs are uninitialized, displays a graceful recovery hint rather than intrusive error dialogs.
 - **Full Keyboard Navigation**: Supports standard Omarchy shortcuts (`←` / `→` for periods, `1`–`6` for direct jumps, `R` to refresh, `Esc` to close).
 
@@ -39,7 +39,7 @@
 - **[Omarchy Linux](https://omarchy.org/)** with `omarchy-shell` (Quickshell).
 - **Node.js** with `npx` (or `bun`) available in your environment `PATH`.
 
-*(No global packages need to be installed manually; `npx` executes CodeBurn on demand.)*
+*(No global packages need to be installed manually; `npx` or `bunx` executes the pinned CodeBurn revision on demand.)*
 
 ---
 
