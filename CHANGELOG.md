@@ -5,7 +5,7 @@ All notable changes to the CodeBurn Omarchy shell plugin will be documented in t
 ## Unreleased
 
 ### Changed
-- Preserve the local `codeburn` binary as the first choice and pin `npx`/`bunx` fallback execution to `codeburn@0.9.20`.
+- Preserve the local `codeburn` binary as the first choice and pin `npx`/`bunx` fallback execution to `codeburn@0.9.27`.
 
 ## [1.1.0] - 2026-08-19
 

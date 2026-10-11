@@ -13,7 +13,7 @@ case "$PERIOD" in
 esac
 
 ARGS=(status --format menubar-json --period "$PERIOD" --no-optimize --no-timeline)
-CODEBURN_PACKAGE="codeburn@0.9.20"
+CODEBURN_PACKAGE="codeburn@0.9.27"
 
 if command -v codeburn >/dev/null 2>&1; then
   exec codeburn "${ARGS[@]}"
